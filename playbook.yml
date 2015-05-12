@@ -1,0 +1,25 @@
+---
+- hosts: node
+  sudo: yes
+  tasks:
+  - name: Install mongodb
+    yum: name=mongodb
+
+  - name: Install mongodb-server
+    yum: name=mongodb-server
+
+  - name: Install memcached
+    yum: name=memcached
+
+  - name: Update level mongod chkconfig
+    command: /sbin/chkconfig --level 35 mongod on
+
+  - name: Update level memcached chkconfig
+    command: /sbin/chkconfig --level 35 memcached on
+
+  - name: Update mongod config
+    lineinfile: >-
+      dest='/etc/mongodb.conf'
+      state=present
+      regexp='^bind_ip = 127\.0\.0\.1$'
+      line='bind_ip = 0.0.0.0'
